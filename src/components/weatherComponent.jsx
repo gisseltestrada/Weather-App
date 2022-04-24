@@ -12,9 +12,15 @@ export function Weather() {
   const [location, setLocation] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
   const [units, setUnits] = useState("imperial");
+  const [date, setDate] = useState("");
+
+  // console.log(date.toDateString())
+  // console.log(date.toTimeString())
 
   async function handleSubmit(event) {
     event.preventDefault();
+    setSearchLocation(location);
+    // setDate(`${date.toDateString()} ${date.toLocaleTimeString()}`);
     try {
       const response = await axios.get(currentURL, {
         params: {
@@ -23,6 +29,14 @@ export function Weather() {
           units: units,
         },
       });
+
+      // const timeZoneOffset = response.data.timezone * 1000;
+      // const dt = new Date(response.data.dt+timeZoneOffset);
+      if (response.status === 200) {
+        setData(response.data);
+        const date = new Date(response.data.dt*1000+(response.data.timezone*1000));
+        setDate(`${date.toDateString()} ${date.toTimeString()}`)
+      }
     } catch (error) {
       console.error(error);
     }
@@ -48,6 +62,7 @@ export function Weather() {
         <div className="main-info-container">
           {data !== null && (
             <div>
+              <p>{date}</p>
               <p className="location">{data.name}</p>
               <p className="temp">{data.main && data.main.temp}</p>
               <p className="description">
