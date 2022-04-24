@@ -1,44 +1,80 @@
 import React, { useState, useEffect } from "react";
 //allows use of env file(npm install dotenv)
 import env from "react-dotenv";
-import "./weatherComponent.css"
+import "./weatherComponent.css";
+import axios from "axios";
 const currentURL = env.currentApi;
 const fiveDayURL = env.fiveDayApi;
 const apiKey = env.apiKey;
 
 export function Weather() {
-  const currentLocationURL = `${currentURL}q=Dallas,TX,US&appid=${apiKey}`;
-  const fiveDayLocationURL = `${fiveDayURL}q=Dallas,TX,US&appid=${apiKey}`;
   const [data, setData] = useState(null);
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+  const [units, setUnits] = useState("imperial");
 
-   useEffect( () => {
-       fetch(currentLocationURL)
-         .then((response) => response)
-         .then((data) => console.log(data));
-        
-  });
+  async function handleSubmit(event) {
+    event.preventDefault();
+    try {
+      const response = await axios.get(currentURL, {
+        params: {
+          q: searchLocation,
+          appid: apiKey,
+          units: units,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div>
       <div className="main-container">
         <div className="search-container">
           <p>Search City </p>
-          <input type="text" value="" id="" />
-          <button>Search</button>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              id=""
+            />
+            <button type="submit" className="button">
+              Search
+            </button>
+          </form>
         </div>
         <div className="main-info-container">
-          <p className="location">Dallas, TX</p>
-          <p className="temp">81°F</p>
-          <p className="description">Cloudy</p>
-          <div className="additional-info">
-            <p className="feels-like">Feels like 82°F</p>
-            <p className="temp-min">Temperature minimum 79°F</p>
-            <p className="temp-max">Temperature maximum 84°F</p>
-            <p className="pressure">Pressure 29in</p>
-            <p className="humidity">Humidity 53%</p>
-            <p className="wind">Wind Speed 21mph</p>
-          </div>
+          {data !== null && (
+            <div>
+              <p className="location">{data.name}</p>
+              <p className="temp">{data.main && data.main.temp}</p>
+              <p className="description">
+                {data.weather && data.weather[0].main}
+              </p>
+              <div className="additional-info">
+                <p className="feels-like">
+                  Feels like {data.main && data.main.feels_like}
+                </p>
+                <p className="temp-min">
+                  Temperature minimum {data.main && data.main.temp_min}
+                </p>
+                <p className="temp-max">
+                  Temperature maximum {data.main && data.main.temp_max}
+                </p>
+                <p className="pressure">
+                  Pressure {data.main && data.main.pressure}
+                </p>
+                <p className="humidity">
+                  Humidity {data.main && data.main.humidity}
+                </p>
+                <p className="wind">
+                  Wind Speed {data.wind && data.wind.speed}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
