@@ -1,41 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 //allows use of env file(npm install dotenv)
-import env from "react-dotenv";
-import "./weatherComponent.css";
-import axios from "axios";
+import env from 'react-dotenv';
+import './weatherComponent.css';
+import axios from 'axios';
+import DateComponent from './date/dateComponent';
 const currentURL = env.currentApi;
 const fiveDayURL = env.fiveDayApi;
 const apiKey = env.apiKey;
 
 export function Weather() {
   const [data, setData] = useState(null);
-  const [location, setLocation] = useState("");
-  const [searchLocation, setSearchLocation] = useState("");
-  const [units, setUnits] = useState("imperial");
-  const [date, setDate] = useState("");
-
-  // console.log(date.toDateString())
-  // console.log(date.toTimeString())
+  const [location, setLocation] = useState('');
+  const [units, setUnits] = useState('imperial');
+  const [date, setDate] = useState({});
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setSearchLocation(location);
-    // setDate(`${date.toDateString()} ${date.toLocaleTimeString()}`);
     try {
       const response = await axios.get(currentURL, {
         params: {
-          q: searchLocation,
+          q: location,
           appid: apiKey,
           units: units,
         },
       });
-
-      // const timeZoneOffset = response.data.timezone * 1000;
-      // const dt = new Date(response.data.dt+timeZoneOffset);
       if (response.status === 200) {
         setData(response.data);
-        const date = new Date(response.data.dt*1000+(response.data.timezone*1000));
-        setDate(`${date.toDateString()} ${date.toTimeString()}`)
+        setDate({
+          dt: response.data.dt,
+          timezone: response.data.timezone,
+        });
       }
     } catch (error) {
       console.error(error);
@@ -52,7 +46,6 @@ export function Weather() {
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              id=""
             />
             <button type="submit" className="button">
               Search
@@ -60,9 +53,9 @@ export function Weather() {
           </form>
         </div>
         <div className="main-info-container">
-          {data !== null && (
+          {data && (
             <div>
-              <p>{date}</p>
+              <DateComponent dateTime={date} />
               <p className="location">{data.name}</p>
               <p className="temp">{data.main && data.main.temp}</p>
               <p className="description">
