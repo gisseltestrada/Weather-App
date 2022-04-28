@@ -42,7 +42,9 @@
     "whitelist": [
       "apiKey",
       "fiveDayApi",
-      "currentApi"
+      "currentApi",
+      "sevenDayApi",
+      "geocodeApi"
     ]
   }
 }

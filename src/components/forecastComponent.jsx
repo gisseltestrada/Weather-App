@@ -1,7 +1,9 @@
 import React from "react";
 import "./forecastComponent.css";
 
-export function ForecastComponent() {
+export function ForecastComponent(props) {
+  const maxTemp = props.weather.temp.max;
+  const minTemp = props.weather.temp.min;
   return (
     <div className="forecast-main-container">
       <div className="forecast-data-container">
