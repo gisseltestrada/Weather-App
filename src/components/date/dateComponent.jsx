@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DateTime } from 'luxon';
 export default function DateComponent(props) {
   const date = DateTime.fromSeconds(props.dateTime.dt, {
@@ -10,7 +10,7 @@ export default function DateComponent(props) {
 
   return (
     <div className="dateTime">
-      <p>{date.toLocaleString(DateTime.DATETIME_FULL)}</p>
+      <p className="date-time">{date.toLocaleString(DateTime.DATETIME_FULL)}</p>
     </div>
   );
 }

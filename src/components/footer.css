@@ -1,0 +1,25 @@
+.footer-container {
+  position: fixed;
+  bottom: 0;
+  background-color: #98c9cb;
+  width: 100vw;
+  margin: 0 auto;
+  padding: 0;
+}
+
+ul {
+  display: flex;
+  list-style-type: none;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: .25rem;
+}
+
+ul li {
+  margin-right: 10px;
+  margin-left: 10px;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.75rem;
+}

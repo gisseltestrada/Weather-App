@@ -1,0 +1,89 @@
+.location-container {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding-right: 4rem;
+}
+.location-icon{
+  fill: #00697b;
+  transform: scale(.75);
+}
+.icon-data-container {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.current-icon-container{
+  padding: 3.5rem;
+   margin-top: 2rem;
+}
+.current-icon{
+  fill: #00697b;
+  transform: scale(3);
+  margin-right: 3rem;
+  margin-top: 1rem;
+}
+
+p.temp {
+  font-size: 4.6rem;
+  font-weight: 400;
+  margin: 0 auto;
+  padding: 2.5rem;
+}
+.date-time{
+  margin:0;
+  padding-bottom: .5rem;
+  padding-right: 8rem;
+  font-size: .95rem;
+ 
+}
+
+.wind-container {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 0;
+}
+.wind-icon{
+  fill: #00697b;
+  transform: scale(.60);
+}
+
+.data-container {
+  line-height: 0.1rem;
+  margin-top: 15px;
+  margin-left: 15px;
+
+}
+
+.current-main-container {
+  color: #00697b;
+  margin-top: 15px;
+}
+
+p.location {
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+p.feels-like {
+  font-size: 0.75rem;
+}
+
+.wind {
+  font-size: 0.75rem;
+}
+
+p.temp-min-max {
+  font-size: 0.75rem;
+}
+
+p.pressure {
+  font-size: 0.75rem;
+}
+
+p.humidity {
+    font-size: 0.75rem;
+}
