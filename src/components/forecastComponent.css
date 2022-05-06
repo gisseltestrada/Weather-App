@@ -6,9 +6,6 @@
   margin: 10px;
 }
 
-.forecast-data-container {
-  
-}
 
 .forecast-main-container p {
   color: white;
@@ -26,12 +23,6 @@
   margin: 0 auto;
 }
 
-.forecast-icon {
-  fill: #00697b;
-  transform: scale(1.5);
-  padding-bottom: 28px;
-  padding-top: 10px;
-}
 
 .forecast-wind-container {
   display: flex;

@@ -18,9 +18,8 @@
   padding: 3.5rem;
    margin-top: 2rem;
 }
-.current-icon{
-  fill: #00697b;
-  transform: scale(3);
+#current-icon{
+  transform: scale(1.25);
   margin-right: 3rem;
   margin-top: 1rem;
 }

@@ -5,6 +5,13 @@
   z-index: 50;
 }
 
+.unit-menu {
+   position: absolute;
+  top:0;
+  left: 40vw;
+
+}
+
 .toolbar-search {
   display: flex;
   margin: 0 auto;
@@ -51,6 +58,30 @@
 }
 button:hover {
   cursor: pointer;
+}
+
+.simply-weather {
+  color:  #00697b;
+  font-size: 2.5rem;
+  margin-top: 35vh;
+}
+
+.handle-error{
+  color:  #00697b;
+  margin-top: 15vh;
+}
+.handle-error .message{
+  font-size: 2rem;
+  margin: 0 auto;
+
+}
+.handle-error .resolution{
+  font-size: 1.25rem;
+  margin: 0 auto;
+}
+
+.error-svg{
+ 
 }
 
 .forecast-component-container {

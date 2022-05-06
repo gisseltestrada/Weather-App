@@ -20,9 +20,13 @@ export function Weather() {
   const [units, setUnits] = useState("imperial");
   const [date, setDate] = useState({});
   const [description, setDescription] = useState("");
+  const [timezoneOffset, setTimezoneOffset] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleChange = async (event) => {
     setUnits(event.target.value);
+    let lon;
+    let lat;
     try {
       const response = await axios.get(currentURL, {
         params: {
@@ -40,12 +44,53 @@ export function Weather() {
         });
       }
     } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      const response = await axios.get(geocodeApi, {
+        params: {
+          q: location,
+          appid: apiKey,
+        },
+      });
+      if (response.status === 200) {
+        lat = response.data[0].lat;
+        lon = response.data[0].lon;
+        if (lat !== undefined && lon !== undefined) {
+          try {
+            const response = await axios.get(sevenDayApi, {
+              params: {
+                lat: lat,
+                lon: lon,
+                appid: apiKey,
+                units: event.target.value,
+                exclude: "current,minutely,hourly,alerts",
+              },
+            });
+            if (response.status === 200) {
+              setTimezoneOffset(response.data.timezone_offset);
+              let tempForecast = [];
+              for (const index in response.data.daily) {
+                if (index > 0 && index < 6) {
+                  tempForecast.push(response.data.daily[index]);
+                }
+              }
+              setForecast(tempForecast);
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      }
+    } catch (error) {
       console.error(error);
     }
   };
 
   async function handleSubmit(event) {
     event.preventDefault();
+    setError(null);
     let lon;
     let lat;
     try {
@@ -65,7 +110,12 @@ export function Weather() {
         });
       }
     } catch (error) {
-      console.error(error);
+      setData(null);
+      setError({
+        title: "",
+        message: "INVALID INPUT",
+        resolution: "PLEASE TRY AGAIN",
+      });
     }
 
     try {
@@ -90,27 +140,44 @@ export function Weather() {
               },
             });
             if (response.status === 200) {
+              setTimezoneOffset(response.data.timezone_offset);
               let tempForecast = [];
               for (const index in response.data.daily) {
                 if (index > 0 && index < 6) {
                   tempForecast.push(response.data.daily[index]);
                 }
               }
-              console.log(tempForecast);
               setForecast(tempForecast);
             }
           } catch (error) {
-            console.error(error);
+            setForecast([]);
+            setError({
+              title: "",
+              message: "INVALID INPUT",
+              resolution: "PLEASE TRY AGAIN",
+            });
           }
         }
       }
     } catch (error) {
-      console.error(error);
+      setForecast([]);
+      setError({
+        title: "",
+        message: "INVALID INPUT",
+        resolution: "PLEASE TRY AGAIN",
+      });
     }
   }
 
-  const renderForecast = forecast?.map((weatherObject) => {
-    return <ForecastComponent weather={weatherObject} />;
+  const renderForecast = forecast?.map((weatherObject, index) => {
+    return (
+      <ForecastComponent
+        weather={weatherObject}
+        timezone={timezoneOffset}
+        key={index}
+        units={units}
+      />
+    );
   });
 
   return (
@@ -147,36 +214,47 @@ export function Weather() {
                 SEARCH
               </button>
             </form>
-            <li>
-              <select
-                className="unit-menu"
-                aria-label="units"
-                value={units}
-                onChange={handleChange}
-              >
-                <option defaultValue="UNITS" disabled>
-                  UNITS
-                </option>
-                <option value="imperial">IMPERIAL</option>
-                <option value="metric">METRIC</option>
-                <option value="standard">STANDARD</option>
-              </select>
-            </li>
           </div>
+          <select
+            className="unit-menu"
+            aria-label="units"
+            value={units}
+            onChange={handleChange}
+          >
+            <option defaultValue="UNITS" disabled>
+              UNITS
+            </option>
+            <option value="imperial">IMPERIAL</option>
+            <option value="metric">METRIC</option>
+            <option value="standard">STANDARD</option>
+          </select>
         </div>
         <div className="main-info-container">
-          {data && (
-            <CurrentComponent
-              data={data}
-              date={date}
-              description={description}
-            />
-          )}
+          <div>
+            {data === null && !error && (
+              <p className="simply-weather">SIMPLY WEATHER</p>
+            )}
+            {error && (
+              <div className="handle-error">
+                <p className="message">{error.message}</p>
+                <p className="resolution">{error.resolution}</p>
+              </div>
+            )}
+            {data && (
+              <CurrentComponent
+                data={data}
+                date={date}
+                description={description}
+                units={units}
+              />
+            )}
+          </div>
+        </div>
+        <div className="forecast-component-container">
+          {forecast && renderForecast}
         </div>
       </div>
-      <div className="forecast-component-container">
-        {forecast && renderForecast}
-      </div>
+
       <Footer />
     </div>
   );
