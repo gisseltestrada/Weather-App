@@ -88,9 +88,8 @@ export function ForecastComponent(props) {
   };
 
   const getWeekday = () => {
-    const dateComp = date.toLocaleString(DateTime.DATETIME_FULL);
+    const dateComp = date.toString(DateTime.DATETIME_FULL);
     const currentDay = new Date(dateComp);
-
     switch (currentDay.getDay()) {
       case 0:
         return "Sun";
